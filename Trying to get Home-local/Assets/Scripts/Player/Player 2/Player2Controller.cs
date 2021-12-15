@@ -19,7 +19,7 @@ public class Player2Controller : MonoBehaviour
     private float moveForce = 50;
 
     //Animation code
-    //private Animator playAnim;
+    public Animator player2DAnim;
 
     public bool is2DGrounded;
     public LayerMask whatIsGround;
@@ -41,20 +41,29 @@ public class Player2Controller : MonoBehaviour
     // Update is called once per frame
 
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector2 inputVector = playerControls.Land.Move.ReadValue<Vector2>();
         
 
-        //Animation Code
-        //playAnim.SetFloat("moveSpeed", playerRigibody.velocity.magnitude);
+        
 
         RaycastHit hitGround;
         if(Physics.Raycast(groundPoint.position, Vector3.down, out hitGround, 1f, whatIsGround))
         {
             //Debug.Log("2D on ground");
             is2DGrounded = true;
-            playerRigibody.velocity = new Vector3(inputVector.x * speed, playerRigibody.velocity.y, inputVector.y * speed);
+            if(inputVector != Vector2.zero)
+            {
+                playerRigibody.velocity = new Vector3(inputVector.x * speed, playerRigibody.velocity.y, inputVector.y * speed);
+                player2DAnim.SetBool("isWalking", true);
+            }
+            else
+            {
+                player2DAnim.SetBool("isWalking", false);
+            }
+            
+            
         }
         else
         {
@@ -82,15 +91,15 @@ public class Player2Controller : MonoBehaviour
             MoveObject();
         }
 
-        //Animation Code
-        //playAnim.SetBool("onGround", isGrounded);
+        
 
-        if (!playerSpriteRender.flipX && inputVector.x < 0)
-        {
-            playerSpriteRender.flipX = true;
-        } else if(playerSpriteRender.flipX && inputVector.x > 0)
+        if (playerSpriteRender.flipX && inputVector.x < 0)
         {
             playerSpriteRender.flipX = false;
+        } else if(!playerSpriteRender.flipX && inputVector.x > 0)
+        {
+            
+            playerSpriteRender.flipX = true;
         }
     }
 
