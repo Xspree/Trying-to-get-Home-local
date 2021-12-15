@@ -25,15 +25,19 @@ public class Respawn : MonoBehaviour
         GameObject closestRespawn = respawnPoints[0];
         float closestDistance = Vector3.Distance(closestRespawn.transform.position, player.transform.position);
 
-        foreach(GameObject points in respawnPoints)
+        if(respawnPoints.Length > 1)
         {
-
-            if(Vector3.Distance(points.transform.position, player.transform.position) < closestDistance)
+            foreach (GameObject points in respawnPoints)
             {
-                closestRespawn = points;
+
+                if (Vector3.Distance(points.transform.position, player.transform.position) <= closestDistance)
+                {
+                    closestRespawn = points;
+                }
+
             }
-            
         }
+        
 
         if(!playerController.is3DGrounded)
         {
@@ -45,5 +49,34 @@ public class Respawn : MonoBehaviour
             player2.transform.position = closestRespawn.transform.position;
         }
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        GameObject closestRespawn = respawnPoints[0];
+        float closestDistance = Vector3.Distance(closestRespawn.transform.position, player.transform.position);
+
+        if (respawnPoints.Length > 1)
+        {
+            foreach (GameObject points in respawnPoints)
+            {
+
+                if (Vector3.Distance(points.transform.position, player.transform.position) <= closestDistance)
+                {
+                    closestRespawn = points;
+                }
+
+            }
+        }
+
+        if (!playerController.is3DGrounded)
+        {
+            player.transform.position = closestRespawn.transform.position;
+        }
+
+        if (!player2Controller.is2DGrounded)
+        {
+            player2.transform.position = closestRespawn.transform.position;
+        }
     }
 }

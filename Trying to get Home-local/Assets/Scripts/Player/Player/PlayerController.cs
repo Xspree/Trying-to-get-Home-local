@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundPoint;
     public int pickUpRange = 10;
     public Transform holdParent;
+    public Animator player3DAnim;
 
 
 
@@ -36,48 +37,20 @@ public class PlayerController : MonoBehaviour
     {
         playerRigibody = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
-
+        
         playerControls = new PlayerControls();
         playerControls.Land.Enable();
         
     }
 
+    
     // Update is called once per frame
 
     private void Update()
     {
         ControlDrag();
 
-        RaycastHit hit;
-        if (Physics.Raycast(groundPoint.position, Vector3.down, out hit, 1.15f, whatIsGround))
-        {
-            //Debug.Log("3D on ground");
-            is3DGrounded = true;
-        }
-        else
-        {
-            //Debug.Log("3D not on ground");
-            is3DGrounded = false;
-            
-        }
-        if(playerControls.Land.Interaction.triggered && held == null)
-        {
-            
-            RaycastHit hitObj;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
-            {
-                PickupObject(hitObj.transform.gameObject);
-            }
-        }
-        else if(playerControls.Land.Interaction.triggered && held != null)
-        {
-            DropObject();
-        }
         
-        if (held != null)
-        {
-            MoveObject();
-        }
 
     }
     private void MoveObject()
@@ -94,6 +67,7 @@ public class PlayerController : MonoBehaviour
         if (pickObj.GetComponent<Rigidbody>())
         {
             Rigidbody objRig = pickObj.GetComponent<Rigidbody>();
+
             objRig.useGravity = false;
             objRig.drag = 10;
 
@@ -129,9 +103,53 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            playerRigibody.AddForce(new Vector3(inputVector.x, 0, inputVector.y).normalized * speed, ForceMode.Force);
+            
+            if(inputVector != Vector2.zero)
+            {
+                playerRigibody.AddForce(new Vector3(inputVector.x, 0, inputVector.y).normalized * speed, ForceMode.Force);
+                //Debug.Log("Walking");
+                player3DAnim.SetBool("isWalking", true);
+            }
+            else
+            {
+                //Debug.Log("Idle");
+                player3DAnim.SetBool("isWalking", false);
+            }
+            
+            
         }
-        
-        
+
+        RaycastHit hit;
+        if (Physics.Raycast(groundPoint.position, Vector3.down, out hit, 1.15f, whatIsGround))
+        {
+            //Debug.Log("3D on ground");
+            is3DGrounded = true;
+        }
+        else
+        {
+            //Debug.Log("3D not on ground");
+            is3DGrounded = false;
+
+        }
+        if (playerControls.Land.Interaction.triggered && held == null)
+        {
+
+            RaycastHit hitObj;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
+            {
+                PickupObject(hitObj.transform.gameObject);
+            }
+        }
+        else if (playerControls.Land.Interaction.triggered && held != null)
+        {
+            DropObject();
+        }
+
+        if (held != null)
+        {
+            MoveObject();
+        }
+
+
     }
 }
