@@ -12,6 +12,8 @@ public class Puzzle2Check : MonoBehaviour
     private GameObject Spinny3;
     [SerializeField]
     private GameObject Object;
+    [SerializeField]
+    private GameObject wallToDestroy;
 
     private Vector3 spinRotation = new Vector3(90, 0f, 0f);
 
@@ -30,7 +32,7 @@ public class Puzzle2Check : MonoBehaviour
             
             if (Spinny1.transform.localEulerAngles == spinRotationCorrect1 && Spinny2.transform.localEulerAngles == spinRotationCorrect2 && Spinny3.transform.localEulerAngles == spinRotationCorrect3)
             {
-                
+                wallToDestroy.SetActive(false);
                 completed = true;
                 Object.SetActive(true);
             }

@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CollectFood : MonoBehaviour
+public class Collect2DFood : MonoBehaviour
 {
+    
+    public Text junkFoodCounter;
+
+    
+    private int junk = 0;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Collectible"))
@@ -18,13 +25,17 @@ public class CollectFood : MonoBehaviour
         {
             if(collectible is Collectible2DFood)
             {
-                Debug.Log("2D Food Collected");
+                //Debug.Log("2D Food Collected");
+                junk++;
             }
-            else if(collectible is Collectible3DFood)
-            {
-                Debug.Log("3D Food Collected");
-            }
-
+            
+            UpdateGUI();
         }
+    }
+
+    private void UpdateGUI()
+    {
+        
+        junkFoodCounter.text = junk.ToString();
     }
 }
