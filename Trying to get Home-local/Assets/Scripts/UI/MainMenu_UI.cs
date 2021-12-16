@@ -12,7 +12,7 @@ public class MainMenu_UI : MonoBehaviour
 
     public void OnClickQuit()
     {
-        Debug.Log("You have Quit");
+        //Debug.Log("You have Quit");
         Application.Quit();
     }
 }
