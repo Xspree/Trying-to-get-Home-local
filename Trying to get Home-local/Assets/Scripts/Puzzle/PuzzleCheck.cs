@@ -6,15 +6,25 @@ public class PuzzleCheck : MonoBehaviour
 {
     [SerializeField]
     private GameObject Object;
+    [SerializeField]
+    private GameObject wallToDestroy;
+
+    private bool wentThrough = false;
 
     
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<Rigidbody>() != null)
+        if(!wentThrough)
         {
-            Object.SetActive(true);
+            if (other.GetComponent<Rigidbody>() != null)
+            {
+                Object.SetActive(true);
+                wallToDestroy.SetActive(false);
+                wentThrough = true;
+            }
         }
+        
     }
 }

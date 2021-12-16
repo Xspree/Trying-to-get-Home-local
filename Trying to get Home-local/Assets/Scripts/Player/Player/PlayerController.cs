@@ -19,19 +19,19 @@ public class PlayerController : MonoBehaviour
     private PlayerController playerController;
     private PlayerControls playerControls;
     private Rigidbody playerRigibody;
-    private GameObject held;
+    
     private float moveForce = 60;
     private float smoothRotation = 0.1f;
 
-    
 
+    public GameObject held;
     public bool is3DGrounded;
     public LayerMask whatIsGround;
     public Transform groundPoint;
-    public int pickUpRange = 10;
+    public int pickUpRange = 5;
     public Transform holdParent;
     public Animator player3DAnim;
-
+    public float sphereRadius = 10f;
 
 
     float turnSmoothVelocity;
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void DropObject()
+    public void DropObject()
     {
         Rigidbody heldRig = held.GetComponent<Rigidbody>();
         heldRig.useGravity = true;
@@ -143,7 +143,8 @@ public class PlayerController : MonoBehaviour
         {
 
             RaycastHit hitObj;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
+            
+            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
             {
                 PickupObject(hitObj.transform.gameObject);
             }

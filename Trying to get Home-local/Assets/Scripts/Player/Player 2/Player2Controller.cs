@@ -14,19 +14,20 @@ public class Player2Controller : MonoBehaviour
     private Player2Controller playerController;
     private Player2Controls playerControls;
     private Rigidbody playerRigibody;
-    private GameObject held;
+    
     private float moveForce = 50;
     private float smoothRotation = 0.1f;
 
     //Animation code
     public Animator player2DAnim;
-
+    public GameObject held;
     public bool is2DGrounded;
     public LayerMask whatIsGround;
     public Transform groundPoint;
     public SpriteRenderer playerSpriteRender;
-    public int pickUpRange = 10;
+    public int pickUpRange = 5;
     public Transform holdParent;
+    public float sphereRadius = 10f;
 
 
     float turnSmoothVelocity;
@@ -96,7 +97,7 @@ public class Player2Controller : MonoBehaviour
         {
             //Debug.Log("2D Trying to pick up or move something");
             RaycastHit hitObj;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
+            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
             {
                 PickupObject(hitObj.transform.gameObject);
             }
@@ -145,7 +146,7 @@ public class Player2Controller : MonoBehaviour
         }
     }
 
-    private void DropObject()
+    public void DropObject()
     {
         Rigidbody heldRig = held.GetComponent<Rigidbody>();
         heldRig.useGravity = true;
