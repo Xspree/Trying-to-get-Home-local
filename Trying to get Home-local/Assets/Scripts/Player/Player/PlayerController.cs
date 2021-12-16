@@ -19,9 +19,10 @@ public class PlayerController : MonoBehaviour
     private PlayerController playerController;
     private PlayerControls playerControls;
     private Rigidbody playerRigibody;
-    
     private GameObject held;
     private float moveForce = 60;
+    private float smoothRotation = 0.1f;
+
     
 
     public bool is3DGrounded;
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
     public Animator player3DAnim;
 
 
+
+    float turnSmoothVelocity;
 
     void Awake()
     {
@@ -98,6 +101,8 @@ public class PlayerController : MonoBehaviour
         if(!is3DGrounded)
         {
             //Debug.Log("Falling");
+            player3DAnim.SetBool("isWalking", false);
+            //player would be falling so set their animation to falling but we don't have that 
             playerRigibody.AddForce(Vector3.down * gravityScaler * speed);
             playerRigibody.AddForce(new Vector3(inputVector.x  *gravityScaler, 0, inputVector.y * gravityScaler) * speed);
         }
@@ -106,6 +111,9 @@ public class PlayerController : MonoBehaviour
             
             if(inputVector != Vector2.zero)
             {
+                float targetAngle = Mathf.Atan2(inputVector.x, inputVector.y) * Mathf.Rad2Deg;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, smoothRotation);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
                 playerRigibody.AddForce(new Vector3(inputVector.x, 0, inputVector.y).normalized * speed, ForceMode.Force);
                 //Debug.Log("Walking");
                 player3DAnim.SetBool("isWalking", true);

@@ -14,9 +14,9 @@ public class Player2Controller : MonoBehaviour
     private Player2Controller playerController;
     private Player2Controls playerControls;
     private Rigidbody playerRigibody;
-    
     private GameObject held;
     private float moveForce = 50;
+    private float smoothRotation = 0.1f;
 
     //Animation code
     public Animator player2DAnim;
@@ -27,6 +27,9 @@ public class Player2Controller : MonoBehaviour
     public SpriteRenderer playerSpriteRender;
     public int pickUpRange = 10;
     public Transform holdParent;
+
+
+    float turnSmoothVelocity;
 
     void Awake()
     {
@@ -55,8 +58,25 @@ public class Player2Controller : MonoBehaviour
             is2DGrounded = true;
             if(inputVector != Vector2.zero)
             {
+                float targetAngle = Mathf.Atan2(inputVector.x, inputVector.y) * Mathf.Rad2Deg;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, smoothRotation);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
                 playerRigibody.velocity = new Vector3(inputVector.x * speed, playerRigibody.velocity.y, inputVector.y * speed);
-                player2DAnim.SetBool("isWalking", true);
+
+                if(inputVector.y == 1)
+                {
+                    //Debug.Log("isWalking true, isBackwards true");
+                    player2DAnim.SetBool("isWalking", true);
+                    player2DAnim.SetBool("isBackwards", true);
+                }
+                else
+                {
+                    //Debug.Log("isWalking true, isBackwards false");
+                    player2DAnim.SetBool("isWalking", true);
+                    player2DAnim.SetBool("isBackwards", false);
+                }
+                //Debug.Log(inputVector.y);
+                
             }
             else
             {
