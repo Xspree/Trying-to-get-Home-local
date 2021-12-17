@@ -7,5 +7,6 @@ public interface IObject
     void RaiseObject();
     void LowerObject();
     void ToggleObject();
+    
 
 }
