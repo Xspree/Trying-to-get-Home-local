@@ -23,15 +23,18 @@ public class PlayerController : MonoBehaviour
     private float moveForce = 60;
     private float smoothRotation = 0.1f;
 
+    private float currentPickUpRange;
+
 
     public GameObject held;
     public bool is3DGrounded;
     public LayerMask whatIsGround;
     public Transform groundPoint;
-    public int pickUpRange = 5;
+    public float pickUpRange = 5;
     public Transform holdParent;
     public Animator player3DAnim;
     public float sphereRadius = 10f;
+    public LayerMask layerMask;
 
 
     float turnSmoothVelocity;
@@ -70,7 +73,7 @@ public class PlayerController : MonoBehaviour
         if (pickObj.GetComponent<Rigidbody>())
         {
             Rigidbody objRig = pickObj.GetComponent<Rigidbody>();
-
+            objRig.freezeRotation = true;
             objRig.useGravity = false;
             objRig.drag = 10;
 
@@ -84,7 +87,7 @@ public class PlayerController : MonoBehaviour
         Rigidbody heldRig = held.GetComponent<Rigidbody>();
         heldRig.useGravity = true;
         heldRig.drag = 1;
-
+        heldRig.freezeRotation = false;
         held.transform.parent = null;
         held = null;
     }
@@ -144,9 +147,14 @@ public class PlayerController : MonoBehaviour
 
             RaycastHit hitObj;
             
-            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
+            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange, layerMask))
             {
+                currentPickUpRange = hitObj.distance;
                 PickupObject(hitObj.transform.gameObject);
+            }
+            else
+            {
+                currentPickUpRange = pickUpRange;
             }
         }
         else if (playerControls.Land.Interaction.triggered && held != null)
@@ -160,5 +168,13 @@ public class PlayerController : MonoBehaviour
         }
 
 
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        
+        Debug.DrawLine(transform.position, transform.position + transform.TransformDirection(Vector3.forward) * currentPickUpRange);
+        Gizmos.DrawWireSphere(transform.position + transform.TransformDirection(Vector3.forward) * currentPickUpRange, sphereRadius);
     }
 }

@@ -88,10 +88,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   groundPoint: {fileID: 7177276893517429521}
-  pickUpRange: 10
+  pickUpRange: 2
   holdParent: {fileID: 2128396305}
   player3DAnim: {fileID: 228696493}
   sphereRadius: 0.8
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &7177276892963174909
 MonoBehaviour:
   m_ObjectHideFlags: 0

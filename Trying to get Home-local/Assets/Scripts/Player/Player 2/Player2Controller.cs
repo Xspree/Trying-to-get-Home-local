@@ -15,8 +15,10 @@ public class Player2Controller : MonoBehaviour
     private Player2Controls playerControls;
     private Rigidbody playerRigibody;
     
-    private float moveForce = 50;
+    private float moveForce = 20;
     private float smoothRotation = 0.1f;
+
+    private float currentPickUpRange;
 
     //Animation code
     public Animator player2DAnim;
@@ -25,9 +27,10 @@ public class Player2Controller : MonoBehaviour
     public LayerMask whatIsGround;
     public Transform groundPoint;
     public SpriteRenderer playerSpriteRender;
-    public int pickUpRange = 5;
+    public float pickUpRange = 5;
     public Transform holdParent;
     public float sphereRadius = 10f;
+    public LayerMask layerMask;
 
 
     float turnSmoothVelocity;
@@ -97,9 +100,10 @@ public class Player2Controller : MonoBehaviour
         {
             //Debug.Log("2D Trying to pick up or move something");
             RaycastHit hitObj;
-            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange))
+            if (Physics.SphereCast(transform.position, sphereRadius,transform.TransformDirection(Vector3.forward), out hitObj, pickUpRange, layerMask))
             {
                 PickupObject(hitObj.transform.gameObject);
+                currentPickUpRange = hitObj.distance;
             }
             
         }
@@ -135,13 +139,16 @@ public class Player2Controller : MonoBehaviour
 
     private void PickupObject(GameObject pickObj)
     {
+        
         if(pickObj.GetComponent<Rigidbody>())
         {
+            
             Rigidbody objRig = pickObj.GetComponent<Rigidbody>();
             objRig.useGravity = false;
-            objRig.drag = 10;
-
+            
+            objRig.freezeRotation = true;
             objRig.transform.parent = holdParent;
+            
             held = pickObj;
         }
     }
@@ -151,9 +158,18 @@ public class Player2Controller : MonoBehaviour
         Rigidbody heldRig = held.GetComponent<Rigidbody>();
         heldRig.useGravity = true;
         heldRig.drag = 1;
+        heldRig.freezeRotation = false;
 
         held.transform.parent = null;
         held = null;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        Debug.DrawLine(transform.position, transform.position + transform.TransformDirection(Vector3.forward) * currentPickUpRange);
+        Gizmos.DrawWireSphere(transform.position + transform.TransformDirection(Vector3.forward) * currentPickUpRange, sphereRadius);
     }
 
 }

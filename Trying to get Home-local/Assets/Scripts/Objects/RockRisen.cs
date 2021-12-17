@@ -41,4 +41,6 @@ public class RockRisen : MonoBehaviour , IObject
             LowerObject();
         }
     }
+
+   
 }

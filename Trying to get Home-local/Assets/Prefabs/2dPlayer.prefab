@@ -353,9 +353,12 @@ MonoBehaviour:
     m_Bits: 256
   groundPoint: {fileID: 4672932592156796947}
   playerSpriteRender: {fileID: 4672932592309931110}
-  pickUpRange: 10
+  pickUpRange: 2
   holdParent: {fileID: 302429444474280033}
   sphereRadius: 0.8
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!95 &3281973697432221343
 Animator:
   serializedVersion: 3
@@ -412,7 +415,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5417211063366260361}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.82}
+  m_LocalPosition: {x: 0, y: 0, z: 0.967}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4672932593472446925}
