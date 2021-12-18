@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VictoryUIManagerLevel2 : MonoBehaviour
 {
@@ -10,6 +11,12 @@ public class VictoryUIManagerLevel2 : MonoBehaviour
     [SerializeField]
     private GameObject victoryUI;
 
+    [SerializeField]
+    private Text timerText;
+
+    private float startTimer;
+    private bool finished = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -17,7 +24,21 @@ public class VictoryUIManagerLevel2 : MonoBehaviour
         {
             if (player3D.inside)
             {
+                finished = true;
                 victoryUI.SetActive(true);
+            }
+            else
+            {
+                if (!finished)
+                {
+                    float t = Time.time - startTimer;
+
+                    string minutes = ((int)t / 60).ToString();
+                    string seconds = (t % 60).ToString("f0");
+
+                    timerText.text = minutes + " : " + seconds;
+                }
+
             }
         }
 
